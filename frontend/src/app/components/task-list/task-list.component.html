@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="header">
+    <h1>Gestor de Tareas</h1>
+    <div class="filter-container">
+      <label for="filter">Filtrar por estado:</label>
+      <select id="filter" [(ngModel)]="filterStatus" (change)="applyFilter()">
+        <option value="all">Todas</option>
+        <option value="pendiente">Pendientes</option>
+        <option value="completado">Completadas</option>
+      </select>
+    </div>
+    <button class="btn btn-primary" [routerLink]="['/add']">
+      <i class="fas fa-plus"></i> Nueva Tarea
+    </button>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Cargando tareas...</p>
+    </div>
+  } @else {
+    <div class="tasks-container">
+      @if (filteredTasks.length === 0) {
+        <div class="no-tasks">
+          <i class="fas fa-tasks"></i>
+          <p>No hay tareas que mostrar.</p>
+        </div>
+      }
+
+      @for (task of filteredTasks; track task._id) {
+        <div class="task-card" [ngClass]="{'completed': task.estado === 'completado'}">
+          <div class="task-header">
+            <h3>{{ task.titulo }}</h3>
+            <div class="task-actions">
+              <button class="btn btn-icon" (click)="toggleCompleted(task)" [title]="task.estado === 'completado' ? 'Marcar como pendiente' : 'Marcar como completada'">
+                <i class="fas" [ngClass]="task.estado === 'completado' ? 'fa-check-circle' : 'fa-circle'"></i>
+              </button>
+              <button class="btn btn-icon" [routerLink]="['/edit', task._id]" title="Editar">
+                <i class="fas fa-edit"></i>
+              </button>
+              <button class="btn btn-icon btn-danger" (click)="deleteTask(task._id)" title="Eliminar">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+          <p class="task-description">{{ task.descripcion }}</p>
+          <div class="task-info">
+            <div class="task-materia">
+              <i class="fas fa-book"></i>
+              {{ task.materia }}
+            </div>
+            <div class="task-fecha">
+              <i class="fas fa-calendar"></i>
+              {{ task.fecha_limite | date:'dd/MM/yyyy' }}
+            </div>
+          </div>
+          <div class="task-footer">
+            <span class="task-date">Creada: {{ task.createdAt | date:'dd/MM/yyyy' }}</span>
+            <span class="task-status" [ngClass]="{'status-completed': task.estado === 'completado', 'status-pending': task.estado === 'pendiente'}">
+              {{ task.estado === 'completado' ? 'Completada' : 'Pendiente' }}
+            </span>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

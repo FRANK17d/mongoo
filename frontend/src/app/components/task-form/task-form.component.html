@@ -1,0 +1,124 @@
+
+<div class="container">
+  <div class="header">
+    <h1>{{ isEditMode ? 'Editar Tarea' : 'Crear Nueva Tarea' }}</h1>
+  </div>
+
+  @if (isLoading) {
+    <div class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Cargando datos de la tarea...</p>
+    </div>
+  } @else {
+    <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+      <div class="form-group">
+        <label for="titulo">Título</label>
+        <input 
+          type="text" 
+          id="titulo" 
+          formControlName="titulo" 
+          class="form-control" 
+          placeholder="Ingresa el título de la tarea"
+          [ngClass]="{'is-invalid': taskForm.get('titulo')?.invalid && taskForm.get('titulo')?.touched}"
+        >
+        @if (taskForm.get('titulo')?.invalid && taskForm.get('titulo')?.touched) {
+          <div class="invalid-feedback">
+            @if (taskForm.get('titulo')?.errors?.['required']) {
+              <div><i class="fas fa-exclamation-circle"></i> El título es obligatorio.</div>
+            }
+            @if (taskForm.get('titulo')?.errors?.['minlength']) {
+              <div><i class="fas fa-exclamation-circle"></i> El título debe tener al menos 3 caracteres.</div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción</label>
+        <textarea 
+          id="descripcion" 
+          formControlName="descripcion" 
+          class="form-control" 
+          rows="4"
+          placeholder="Describe la tarea detalladamente"
+          [ngClass]="{'is-invalid': taskForm.get('descripcion')?.invalid && taskForm.get('descripcion')?.touched}"
+        ></textarea>
+        @if (taskForm.get('descripcion')?.invalid && taskForm.get('descripcion')?.touched) {
+          <div class="invalid-feedback">
+            <i class="fas fa-exclamation-circle"></i> La descripción es obligatoria.
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="materia">Materia</label>
+        <input 
+          type="text" 
+          id="materia" 
+          formControlName="materia" 
+          class="form-control" 
+          placeholder="Ejemplo: Matemáticas, Programación, etc."
+          [ngClass]="{'is-invalid': taskForm.get('materia')?.invalid && taskForm.get('materia')?.touched}"
+        >
+        @if (taskForm.get('materia')?.invalid && taskForm.get('materia')?.touched) {
+          <div class="invalid-feedback">
+            <i class="fas fa-exclamation-circle"></i> La materia es obligatoria.
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="fecha_limite">Fecha Límite</label>
+        <input 
+          type="date" 
+          id="fecha_limite" 
+          formControlName="fecha_limite" 
+          class="form-control" 
+          [ngClass]="{'is-invalid': taskForm.get('fecha_limite')?.invalid && taskForm.get('fecha_limite')?.touched}"
+        >
+        @if (taskForm.get('fecha_limite')?.invalid && taskForm.get('fecha_limite')?.touched) {
+          <div class="invalid-feedback">
+            @if (taskForm.get('fecha_limite')?.errors?.['required']) {
+              <div><i class="fas fa-exclamation-circle"></i> La fecha límite es obligatoria.</div>
+            }
+            @if (taskForm.get('fecha_limite')?.errors?.['pastDate']) {
+              <div><i class="fas fa-exclamation-circle"></i> La fecha límite no puede estar en el pasado.</div>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="estado">Estado</label>
+        <select 
+          id="estado" 
+          formControlName="estado" 
+          class="form-control"
+          [ngClass]="{'is-invalid': taskForm.get('estado')?.invalid && taskForm.get('estado')?.touched}"
+        >
+          <option value="pendiente">Pendiente</option>
+          <option value="completado">Completado</option>
+        </select>
+        @if (taskForm.get('estado')?.invalid && taskForm.get('estado')?.touched) {
+          <div class="invalid-feedback">
+            <i class="fas fa-exclamation-circle"></i> El estado es obligatorio.
+          </div>
+        }
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isSubmitting">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting || taskForm.invalid">
+          @if (isSubmitting) {
+            <span class="spinner-sm"></span>
+            Guardando...
+          } @else {
+            <i class="fas fa-save"></i> {{ submitButtonText }}
+          }
+        </button>
+      </div>
+    </form>
+  }
+</div>
