@@ -415,6 +415,7 @@ body {
   font-size: 1.5rem;
 }
 
+/* Estilos CSS mejorados para destacar mejor los enlaces activos */
 .app-nav {
   display: flex;
   gap: 1.5rem;
@@ -428,11 +429,32 @@ body {
   font-weight: 500;
   font-size: 0.9375rem;
   transition: all var(--transition);
+  position: relative;
 }
 
-.app-nav a:hover, .app-nav a.active {
+/* Efecto hover */
+.app-nav a:hover {
   color: var(--primary-color);
   background-color: rgba(59, 130, 246, 0.08);
+}
+
+/* Estilo para enlace activo - más destacado */
+.app-nav a.active {
+  color: var(--primary-color);
+  background-color: rgba(59, 130, 246, 0.12);
+  font-weight: 600;
+}
+
+/* Indicador de enlace activo */
+.app-nav a.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
 }
 
 .app-content {
